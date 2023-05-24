@@ -83,20 +83,21 @@ namespace LCIO2EDM4hepConv {
   };
 
   using CollNamePair = std::tuple<std::string, std::unique_ptr<podio::CollectionBase>>;
-  
+
   /*
-  * Converts a LCIntVec or LCFloatVec Collection.  
+  * Converts a LCIntVec or LCFloatVec Collection.
 
    * NOTE: Since podio doesnt have a structure for vector of vector of <datatype> or
    *a collection that can be filled with multiple vector<int> or vector<float>,
    *a workaround had to be found to convert the LCIO data.
-   *All the data gets put into one Collection with an additional Collection 
-   *holding the beginnings and ends of the original vectors. 
+   *All the data gets put into one Collection with an additional Collection
+   *holding the beginnings and ends of the original vectors.
   */
   template<typename LCVecType>
-  std::vector<CollNamePair> convertLCVec(const std::string &name, EVENT::LCCollection *LCCollection) {
-  auto dest = std::make_unique<podio::UserDataCollection<typename LCVecType::value_type>>();
-  auto vecSizes = std::make_unique<podio::UserDataCollection<uint32_t>>();
+  std::vector<CollNamePair> convertLCVec(const std::string& name, EVENT::LCCollection* LCCollection)
+  {
+    auto dest = std::make_unique<podio::UserDataCollection<typename LCVecType::value_type>>();
+    auto vecSizes = std::make_unique<podio::UserDataCollection<uint32_t>>();
     if (LCCollection->getNumberOfElements() > 0) {
       vecSizes->push_back(0);
     }
@@ -118,8 +119,9 @@ namespace LCIO2EDM4hepConv {
   Converting all parameters of an LCIO Object and attaching them to the current podio Frame.
   */
   template<typename LCIOType>
-  void convertObjectParameters(LCIOType *lcioobj, podio::Frame &event) {
-    const auto &params = lcioobj->getParameters();
+  void convertObjectParameters(LCIOType* lcioobj, podio::Frame& event)
+  {
+    const auto& params = lcioobj->getParameters();
     // handle srting params
     EVENT::StringVec keys;
     const auto stringKeys = params.getStringKeys(keys);
@@ -154,10 +156,10 @@ namespace LCIO2EDM4hepConv {
     }
   }
   /*
-  * Convert a LCRunHeader to EDM4hep as a frame.
-  */
+   * Convert a LCRunHeader to EDM4hep as a frame.
+   */
   podio::Frame convertRunHeader(EVENT::LCRunHeader* rheader);
-  
+
   /**
    * Convert a complete LCEvent from LCIO to EDM4hep
    */
@@ -237,7 +239,7 @@ namespace LCIO2EDM4hepConv {
     EVENT::LCCollection* LCCollection,
     TypeMapT<const lcio::ReconstructedParticle*, edm4hep::MutableReconstructedParticle>& recoparticlesMap,
     TypeMapT<const lcio::ParticleID*, edm4hep::MutableParticleID>& particleIDMap);
-  
+
   /**
    * Convert a Vertex collection and return the resulting collection.
    * Simultaneously populates the mapping from LCIO to EDM4hep objects.

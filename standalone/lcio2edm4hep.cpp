@@ -93,8 +93,7 @@ int main(int argc, char* argv[])
     const auto edmRunHeader = LCIO2EDM4hepConv::convertRunHeader(rhead);
     writer.writeFrame(edmRunHeader, "runs");
   }
-  
-/*
+
   for (auto i = 0u; i < lcreader->getNumberOfEvents(); ++i) {
     if (i % 10 == 0) {
       std::cout << "processing Event: " << i << std::endl;
@@ -107,7 +106,6 @@ int main(int argc, char* argv[])
     const auto edmEvent = LCIO2EDM4hepConv::convertEvent(evt);
     writer.writeFrame(edmEvent, "events");
   }
-  */
 
   writer.finish();
 
