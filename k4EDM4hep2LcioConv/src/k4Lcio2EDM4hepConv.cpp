@@ -492,7 +492,7 @@ namespace LCIO2EDM4hepConv {
     } else if (type == "LCFloatVec") {
       return convertLCVec<EVENT::LCFloatVec>(name, LCCollection);
     } else if (type != "LCRelation") {
-      std::cerr << type << " is not a collction type that is not beein handled during data conversion." << std::endl;
+      //std::cerr << type << " is not a collction type that is not beein handled during data conversion." << std::endl;
     }
     return retColls;
   }
@@ -849,8 +849,8 @@ namespace LCIO2EDM4hepConv {
       const auto &fromType = params.getStringVal("FromType");
       const auto &toType = params.getStringVal("ToType");
       if (fromType.empty() || toType.empty()) {
-        std::cerr << "LCRelation collection " << name << " has missing FromType or ToType parameters. "
-                  << "Cannot convert it without this information." << std::endl;
+        //std::cerr << "LCRelation collection " << name << " has missing FromType or ToType parameters. "
+          //        << "Cannot convert it without this information." << std::endl;
         continue;
       }
 
@@ -911,8 +911,8 @@ namespace LCIO2EDM4hepConv {
             relations, typeMapping.vertices, typeMapping.recoParticles);
         assoCollVec.emplace_back(name, std::move(mc_a));
       } else {
-        std::cout << "Relation from: " << fromType << " to: " << toType << " (" << name
-                  << ") is not beeing handled during creation of associations" << std::endl;
+        //std::cout << "Relation from: " << fromType << " to: " << toType << " (" << name
+          //        << ") is not beeing handled during creation of associations" << std::endl;
       }
     }
 
@@ -949,6 +949,26 @@ namespace LCIO2EDM4hepConv {
     } else {
       return nullptr;
     }
+  }
+
+  podio::Frame convertRunHeader(EVENT::LCRunHeader* rheader){
+    podio::Frame runHeaderFrame;
+    //set run number
+    runHeaderFrame.putParameter("runNumber",rheader-> getRunNumber());
+    //set detector name
+    runHeaderFrame.putParameter("detectoName",rheader-> getDetectorName());
+    //set description
+    runHeaderFrame.putParameter("description",rheader-> getDescription());
+    //set active subdetectors 
+    auto subdetectors = rheader-> getActiveSubdetectors();
+    
+    if (subdetectors->size() != 0){ // This line needs to b removed later on!
+      runHeaderFrame.putParameter("activeSubdetectors",*subdetectors);
+    }   
+    // convert everything set as a parameter
+    convertObjectParameters<EVENT::LCRunHeader>(rheader, runHeaderFrame);
+
+    return runHeaderFrame;
   }
 
 } // namespace LCIO2EDM4hepConv

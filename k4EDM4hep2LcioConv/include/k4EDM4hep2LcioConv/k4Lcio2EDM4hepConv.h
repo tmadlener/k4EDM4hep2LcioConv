@@ -153,7 +153,11 @@ namespace LCIO2EDM4hepConv {
       event.putParameter(dKeys[i], dVals);
     }
   }
-
+  /*
+  * Convert a LCRunHeader to EDM4hep as a frame.
+  */
+  podio::Frame convertRunHeader(EVENT::LCRunHeader* rheader);
+  
   /**
    * Convert a complete LCEvent from LCIO to EDM4hep
    */
