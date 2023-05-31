@@ -527,7 +527,7 @@ namespace LCIO2EDM4hepConv {
       retColls.emplace_back(name, convertTrack(name, LCCollection, typeMapping.tracks));
     }
     else if (type == "Cluster") {
-      return convertCluster(name, LCCollection, typeMapping.clusters,typeMapping.particleIDs);
+      return convertCluster(name, LCCollection, typeMapping.clusters, typeMapping.particleIDs);
     }
     else if (type == "SimCalorimeterHit") {
       retColls.emplace_back(name, convertSimCalorimeterHit(name, LCCollection, typeMapping.simCaloHits));
