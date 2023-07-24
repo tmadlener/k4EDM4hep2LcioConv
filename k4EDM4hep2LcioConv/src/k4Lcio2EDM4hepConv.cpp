@@ -548,7 +548,7 @@ namespace LCIO2EDM4hepConv {
       retColls.emplace_back(name, convertTrackerHits(name, LCCollection, typeMapping.trackerHits));
     }
     else if (type == "TrackerHitPlane") {
-      retColls.emplace_back(name, convertTrackerHitPlanes(name, LCCollection, typeMapping.trackerHitPlanes));
+      retColls.emplace_back(name, convertTrackerHits(name, LCCollection, typeMapping.trackerHits));
     }
     else if (type == "LCIntVec") {
       return convertLCVec<EVENT::LCIntVec>(name, LCCollection);
