@@ -864,4 +864,67 @@ namespace EDM4hep2LCIOConv {
     }
   }
 
+  template<typename ObjectMappingT>
+  lcio::LCCollectionVec* convertCollection(
+    const podio::CollectionBase* edmCollection,
+    const std::string& name,
+    ObjectMappingT& objectMappings,
+    const std::string& cellIDStr)
+  {
+    if (auto coll = dynamic_cast<const edm4hep::TrackCollection*>(edmCollection)) {
+      return convTracks(coll, objectMappings.tracks, objectMappings.trackerHits);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::TrackerHit3DCollection*>(edmCollection)) {
+      return convTrackerHits(coll, cellIDStr, objectMappings.trackerHits);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::TrackerHitPlaneCollection*>(edmCollection)) {
+      return convTrackerHitPlanes(coll, cellIDStr, objectMappings.trackerHitPlanes);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::SimTrackerHitCollection*>(edmCollection)) {
+      return convSimTrackerHits(coll, cellIDStr, objectMappings.simTrackerHits, objectMappings.mcParticles);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::CalorimeterHitCollection*>(edmCollection)) {
+      return convCalorimeterHits(coll, cellIDStr, objectMappings.caloHits);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::RawCalorimeterHitCollection*>(edmCollection)) {
+      return convRawCalorimeterHits(coll, objectMappings.rawCaloHits);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::SimCalorimeterHitCollection*>(edmCollection)) {
+      return convSimCalorimeterHits(coll, cellIDStr, objectMappings.simCaloHits, objectMappings.mcParticles);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::RawTimeSeriesCollection*>(edmCollection)) {
+      return convTPCHits(coll, objectMappings.tpcHits);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::ClusterCollection*>(edmCollection)) {
+      return convClusters(coll, objectMappings.clusters, objectMappings.caloHits);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::VertexCollection*>(edmCollection)) {
+      return convVertices(coll, objectMappings.vertices, objectMappings.recoParticles);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::MCParticleCollection*>(edmCollection)) {
+      return convMCParticles(coll, objectMappings.mcParticles);
+    }
+    else if (auto coll = dynamic_cast<const edm4hep::ReconstructedParticleCollection*>(edmCollection)) {
+      return convReconstructedParticles(
+        coll, objectMappings.recoParticles, objectMappings.tracks, objectMappings.vertices, objectMappings.clusters);
+    }
+    else if (
+      dynamic_cast<const edm4hep::EventHeaderCollection*>(edmCollection) ||
+      dynamic_cast<const edm4hep::CaloHitContributionCollection*>(edmCollection)) {
+      // EventHeader is no collection in LCIO
+      // CaloHitContribution "converted" as part of FillMissingCollectoins at the end
+    }
+    else {
+      std::cerr << "Error trying to convert requested " << edmCollection->getValueTypeName() << " with name " << name
+                << "\n"
+                << "List of supported types: "
+                << "Track, TrackerHit, TrackerHitPlane, SimTrackerHit, "
+                << "Cluster, CalorimeterHit, RawCalorimeterHit, "
+                << "SimCalorimeterHit, Vertex, ReconstructedParticle, "
+                << "MCParticle." << std::endl;
+    }
+
+    return nullptr;
+  }
+
 } // namespace EDM4hep2LCIOConv

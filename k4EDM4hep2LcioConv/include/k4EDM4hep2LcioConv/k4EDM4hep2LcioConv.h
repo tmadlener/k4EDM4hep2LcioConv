@@ -173,6 +173,19 @@ namespace EDM4hep2LCIOConv {
   bool collectionExist(const std::string& collection_name, const lcio::LCEventImpl* lcio_event);
 
   /**
+   * convert an EDM4hep collection into a LCIO collection
+   *
+   * NOTE: This does not cover the EventHeader collection, in which case it will
+   * also simply return a nullptr.
+   */
+  template<typename ObjectMappingT>
+  lcio::LCCollectionVec* convertCollection(
+    const podio::CollectionBase* edmCollection,
+    const std::string& name,
+    ObjectMappingT& objectMappings,
+    const std::string& cellIDStr);
+
+  /**
    * Convert an edm4hep event to an LCEvent
    */
   std::unique_ptr<lcio::LCEventImpl> convEvent(
