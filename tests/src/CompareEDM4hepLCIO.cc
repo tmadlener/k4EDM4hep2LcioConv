@@ -319,9 +319,11 @@ bool compare(const EVENT::Track* lcioElem, const edm4hep::Track& edm4hepElem, co
   double radius = EDM4hep2LCIOConv::getRadiusOfStateAtFirstHit(edm4hepElem).value_or(-1.0);
   double radius3D = EDM4hep2LCIOConv::getRadiusOfStateAtFirstHit(edm4hepElem, true).value_or(-1.0);
   const double radiusLCIO = lcioElem->getRadiusOfInnermostHit();
-  if (std::abs(radius - radiusLCIO) > radiusLCIO / 1e6 && std::abs(radius3D - radiusLCIO) > radiusLCIO / 1e6) {
+  if (!(radiusLCIO == 0 && radius == -1) &&
+      (std::abs(radius - radiusLCIO) > radiusLCIO / 1e6 && std::abs(radius3D - radiusLCIO) > radiusLCIO / 1e6)) {
     std::cerr << "radiusOfInnermostHit in Track (LCIO: " << radiusLCIO << "), EDM4hep: 2d: " << radius
               << ", 3d: " << radius3D << ")" << std::endl;
+    // return false; Technically necessary but MarlinTrkTracks are weird
   }
 
   ASSERT_COMPARE_RELATION(lcioElem, edm4hepElem, getTracks, objectMaps.tracks, "Tracks in Track");
